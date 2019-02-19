@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=0.86, maximum-scale=3.0, minimum-scale=0.86">
+		<link rel="stylesheet" href="css/vendor/bootstrap-4.3.1-dist/css/bootstrap.min.css" \
+			integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" \
+			crossorigin="anonymous">
+    <link rel="stylesheet" href="css/custom/sticky-footer-navbar.css" >
+    <script src="css/vendor/jquery-3.1.1-dist.js"></script>
+		<script src="css/vendor/bootstrap-4.3.1-dist/js/bootstrap.min.js" \
+			integrity=sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" \
+			crossorigin="anonymous"></script>
+		
+		<script type="text/javascript" src="javascript/AjaxUpdater.js"></script>
+		<script type="text/javascript" src="javascript/Ajax.js"></script>
+		<script type="text/javascript" src="javascript/display.js"></script>
+		<script src='javascript/config.js'></script>
+		<script type="text/javascript">
+			function initialize()
+{
+	$api_key = API_KEY.key;
+	timestamp = "&timestamp=" + new Date().getTime(); // to prevent caching
+	$tags=document.getElementById('tags').value ;
+	$tags = $tags.replace(/ /g, ",")
+	//alert($tags)
+	$feed=document.getElementById('feed').selectedIndex ;
+	//getty
+	if ($feed=="0")
+	{
+	var url = 'http://flickr.com/services/rest/?method=flickr.photos.search&api_key=' + $api_key + '&tags=' + $tags + '&content_type=1&is_getty=true&text='+$tags+'&format=json'
+	}
+	//public feed
+	else if($feed=="1")
+	{
+	var url = 'http://api.flickr.com/services/feeds/photos_public.gne?tags='+ $tags + '&format=json'
+	}
+	// b&w
+	else if ($feed=="2")
+	{
+	var url = 'http://flickr.com/services/rest/?method=flickr.photos.search&api_key=' + $api_key + '&tags=' + $tags + '&content_type=1&group_id=52239733174@N01&accuracy=~3&sort=relevance&text='+$tags+'&format=json'
+	}
+	//in galleries
+	else if ($feed=="3")
+	{
+	var url = 'http://flickr.com/services/rest/?method=flickr.photos.search&api_key=' + $api_key + '&tags=' + $tags + '&content_type=1&in_gallery=true&accuracy=~3&sort=relevance&text='+$tags+'&format=json'
+	}
+	
+	else if ($feed=="4")
+	{
+	var url = 'http://flickr.com/services/rest/?method=flickr.photos.search&api_key=' + $api_key + '&tags=' + $tags + '&content_type=1&accuracy=~3&sort=relevance&text='+$tags+'&format=json'
+	}
+	else
+	{
+	var url = 'http://flickr.com/services/rest/?method=flickr.photos.search&api_key=' + $api_key + '&tags=' + $tags + '&content_type=1&accuracy=~3&sort=relevance&text='+$tags+'&is_commons=true&format=json'
+	}
+	
+	url = url+timestamp
+	url = encodeURIComponent(url)
+	
+	AjaxUpdater.Update("GET", "xmlget.php?url=" + url, AjaxUpdater.onResponse);
+	
+}
+		</script>
+		<title>Flickr Search</title>
+	</head>
+
+
+<body>
+
+		<div class="container">
+				
+					<h1>Flickr Search Engine</h1>
+					<p>Six Random Images from Flickr</p> 
+
+				 	<form id="form" METHOD="POST" ACTION="" onsubmit="javascript:initialize(); return false ;">
+						<div class="form-inline row">
+
+							<div class="col-auto my-1">
+								<input type="text" class="form-control" name='tags' id='tags' placeholder="Enter Search Term(s)">
+							</div>
+
+							<div class="col-auto my-1">
+								<label class="mr-sm-2">Gallery: </label>
+							</div>
+
+							<div>
+								<select class="mr-sm-2" id="feed" onchange="initialize(this.selectedIndex); return false ;">
+									<option value="0">Getty Images</option>
+									<option value="1">Public Feed</option>
+									<option value="2">B&amp;W</option>
+									<option value="3">Flickr Galleries</option> 
+									<option value="4">Flickr members</option>
+									<option value="5">Commons</option>
+								</select>
+							</div>
+
+							<div class="col-auto my-1">
+							<button type="submit" class="btn btn-primary">Search</button>
+							</div>
+						</div>
+					</form>
+
+					<div class="row mt-5">
+							<div id="loading"></div>
+							<div id="body" class="table-responsive-xl">
+									<table class="table">
+											<tr>
+												<td id="cell-0" class="text-truncate">&nbsp;</td>
+												<td id="cell-1" class="text-truncate">&nbsp;</td>
+												<td id="cell-2" class="text-truncate">&nbsp;</td>
+											</tr>
+											<tr>  
+												<td id="cell-3" class="text-truncate">&nbsp;</td>
+												<td id="cell-4" class="text-truncate">&nbsp;</td>
+												<td id="cell-5" class="text-truncate">&nbsp;</td>
+											</tr>
+										</table>
+							</div>
+							
+					</div>
+
+					<footer class="footer">
+							<p>Contact information: raoulbia at gmail.com</p>
+						</footer>
+</body>
+</html>
